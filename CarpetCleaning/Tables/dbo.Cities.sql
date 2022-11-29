@@ -1,5 +1,5 @@
 
-CREATE TABLE [dbo].[City](
+CREATE TABLE [dbo].[Cities](
 	[CityID] [int] IDENTITY(1,1) NOT NULL,
 	[City] [varchar](30) NOT NULL,
 	[Zipcode] [tinyint] NOT NULL,
