@@ -2,7 +2,6 @@
 CREATE TABLE [dbo].[Cities](
 	[CityID] [int] IDENTITY(1,1) NOT NULL,
 	[City] [varchar](30) NOT NULL,
-	[Zipcode] [tinyint] NOT NULL,
  CONSTRAINT [PK__City__F2D21A96E67703C7] PRIMARY KEY CLUSTERED 
 (
 	[CityID] ASC
