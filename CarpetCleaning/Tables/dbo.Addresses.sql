@@ -5,7 +5,7 @@ CREATE TABLE [dbo].[Addresses](
 	[Apt] [varchar](50) NULL,
 	[CityID] [int] NOT NULL,
 	[State] [char](2) NOT NULL,
-	[Zip] [tinyint] NOT NULL,
+	[ZipId] [int] NULL,
  CONSTRAINT [PK__Addresse__091C2A1B354C68EC] PRIMARY KEY CLUSTERED 
 (
 	[AddressID] ASC
@@ -14,8 +14,12 @@ CREATE TABLE [dbo].[Addresses](
 GO
 
 ALTER TABLE [dbo].[Addresses]  WITH CHECK ADD  CONSTRAINT [FK__Addresses__CityI__534D60F1] FOREIGN KEY([CityID])
-REFERENCES [dbo].[City] ([CityID])
+REFERENCES [dbo].[Cities] ([CityID])
 GO
 
 ALTER TABLE [dbo].[Addresses] CHECK CONSTRAINT [FK__Addresses__CityI__534D60F1]
+GO
+
+ALTER TABLE [dbo].[Addresses]  WITH CHECK ADD FOREIGN KEY([ZipId])
+REFERENCES [dbo].[Zipcode] ([ZipId])
 GO
