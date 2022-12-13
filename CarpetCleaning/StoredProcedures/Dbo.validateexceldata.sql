@@ -111,14 +111,16 @@ BEGIN
 	UPDATE e
 	SET LoadDataNotes = @PassedValidation
 	FROM DBO.ExcelData e
-	LEFT JOIN DBO.ExcelDataErrors edt on edt.ErrorId = e.RowId
+	LEFT JOIN DBO.ExcelDataErrors edt 
+	on edt.ErrorId = e.RowId
 	WHERE edt.ErrorId IS NULL
 
 	--Failed Validation
 	UPDATE e
 	SET Loaddatanotes = @FailedValidation
 	FROM DBO.ExcelData e
-	LEFT JOIN DBO.ExcelDataErrors edt on edt.ErrorId = e.RowId
+	JOIN DBO.ExcelDataErrors edt 
+	on edt.ErrorId = e.RowId
 
 END
 GO
