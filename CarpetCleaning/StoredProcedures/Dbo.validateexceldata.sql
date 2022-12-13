@@ -6,15 +6,15 @@ BEGIN
 	SET NOCOUNT ON;
 
 	DECLARE
-		@MissingInfORmationError NVARCHAR(255) = 'Missing infORmation in one OR mORe fields',
+		@MissingInformationError NVARCHAR(255) = 'Missing infORmation in one or more fields',
 		@DuplicateInfoError NVARCHAR(255) = 'Duplicate of invoice',
-		@NoServicesErrOR NVARCHAR(255) = 'No services perfORmed',
+		@NoServicesError NVARCHAR(255) = 'No services performed',
 		@TotalNotMatchError NVARCHAR(255) = 'Amount of services combined does not equal total',
 		@NotValidTechnician NVARCHAR(255) = 'Cannot find Technician in table',
 		@NotValidCity NVARCHAR(255) = 'City not in Table',
 		@NotValidState NVARCHAR(255) = 'State not in Table',
 		@WrongZipcode NVARCHAR(255) = 'Wrong number of digits in zip code',
-		@PassedValidation NVARCHAR(255) = 'PASsed Validation',
+		@PassedValidation NVARCHAR(255) = 'Passed Validation',
 		@FailedValidation NVARCHAR(255) = 'Failed Validation'
 
 	--Everytime Validation is run, clean all previous errors off
@@ -31,7 +31,7 @@ BEGIN
 
 	--Missing Information
 	INSERT INTO DBO.ExcelDataErrors (ExcelDataId, ErrorMessage)
-		SELECT Rowid, @MissinginfORmationError FROM DBO.ExcelData
+		SELECT Rowid, @MissinginformationError FROM DBO.ExcelData
 			WHERE (TechnicianName = '' OR TechnicianName IS NULL)
 			OR (Addressnumber = '' OR Addressnumber IS NULL)
 			OR (JobDate = '' OR JobDate IS NULL)
@@ -42,7 +42,7 @@ BEGIN
 			OR (Total = '' OR Total IS NULL OR Total = 0)
 			
 	--Duplicate Invoices
-	INSERT INTO DBO.ExcelEataErrors	(ExcelDataId, ErrorMessage)
+	INSERT INTO DBO.ExcelDataErrors	(ExcelDataId, ErrorMessage)
 	SELECT RowId, @DuplicateInfoerrOR FROM (
 				SELECT *, ROW_NUMBER() OVER	
 				(PARTITION BY Jobdate, TechnicianName, Street, Total 
@@ -52,15 +52,15 @@ BEGIN
 
 	--No services perfORmed
 	INSERT INTO DBO.ExcelDataErrors	(ExcelDataId, ErrorMessage)
-	SELECT Rowid, @NoserviceserrOR FROM DBO.ExcelData
+	SELECT Rowid, @NoServicesError FROM DBO.ExcelData
 		WHERE (Carpet = '' OR Carpet IS NULL OR Carpet = 0)
-			and (UrineTreatment = '' OR UrineTreatment IS NULL OR UrineTreatment = 0)
-			and (Protectant = '' OR Protectant IS NULL OR Protectant = 0)
-			and (Upholstery = '' OR Upholstery IS NULL OR Upholstery = 0)
-			and (AirDucts = '' OR AirDucts IS NULL OR AirDucts = 0)
-			and (Tile = '' OR Tile IS NULL OR Tile = 0)
-			and (DryerVent = '' OR DryerVent IS NULL OR DryerVent = 0)
-			and (Other = '' OR Other IS NULL OR Other = 0)
+			AND (UrineTreatment = '' OR UrineTreatment IS NULL OR UrineTreatment = 0)
+			AND (Protectant = '' OR Protectant IS NULL OR Protectant = 0)
+			AND (Upholstery = '' OR Upholstery IS NULL OR Upholstery = 0)
+			AND (AirDucts = '' OR AirDucts IS NULL OR AirDucts = 0)
+			AND (Tile = '' OR Tile IS NULL OR Tile = 0)
+			AND (DryerVent = '' OR DryerVent IS NULL OR DryerVent = 0)
+			AND (Other = '' OR Other IS NULL OR Other = 0)
 			
 	--Total does not match
 	INSERT INTO DBO.ExcelDataErrors	(ExcelDataId, ErrorMessage)
@@ -78,9 +78,9 @@ BEGIN
 			
 	--Cannot find technician in table
 	INSERT INTO DBO.ExcelDataErrors	(ExcelDataId, ErrorMessage)
-	SELECT Rowid, @NotvalidTechnician 
+	SELECT Rowid, @NotValidTechnician 
 	FROM DBO.ExcelData e
-		LEFT JOIN DBO.technicians t 
+		LEFT JOIN DBO.Technicians t 
 		on t.name = HASHBYTES('SHA2_256', Concat(e.TechnicianName,'Thisisnottherealsalt'))
 		WHERE t.TechnicianID IS NULL
 		
@@ -93,17 +93,17 @@ BEGIN
 
 	--City not in Missouri OR Illinois
 	INSERT INTO DBO.ExcelDataErrors ( ExcelDataId, ErrorMessage)
-	SELECT rowid, @NotvalidState FROM DBO.ExcelData e
+	SELECT rowid, @NotValidState FROM DBO.ExcelData e
 	WHERE [STATE] NOT IN ('MO','IL')
 
 	--Zip code wrong
 	INSERT INTO DBO.ExcelDataErrors ( ExcelDataId, ErrorMessage)
-	SELECT rowid, @WrongZipcode FROM DBO.ExcelData e
-	WHERE zipcode NOT LIKE '[6][0-9][0-9][0-9][0-9]'
+	SELECT Rowid, @WrongZipcode FROM DBO.ExcelData e
+	WHERE Zipcode NOT LIKE '[6][0-9][0-9][0-9][0-9]'
 
 	--Passed Validation
 	UPDATE e
-	SET Loaddatanotes = @PASsedValidation
+	SET LoadDataNotes = @PassedValidation
 	FROM DBO.ExcelData e
 	LEFT JOIN DBO.ExcelDataErrors edt on edt.ErrorId = e.RowId
 	WHERE edt.ErrorId IS NULL
