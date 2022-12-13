@@ -6,7 +6,7 @@ BEGIN
 	SET NOCOUNT ON;
 
 	DECLARE
-		@MissingInformationError NVARCHAR(255) = 'Missing infORmation in one or more fields',
+		@MissingInformationError NVARCHAR(255) = 'Missing information in one or more fields',
 		@DuplicateInfoError NVARCHAR(255) = 'Duplicate of invoice',
 		@NoServicesError NVARCHAR(255) = 'No services performed',
 		@TotalNotMatchError NVARCHAR(255) = 'Amount of services combined does not equal total',
@@ -31,7 +31,8 @@ BEGIN
 
 	--Missing Information
 	INSERT INTO DBO.ExcelDataErrors (ExcelDataId, ErrorMessage)
-		SELECT Rowid, @MissinginformationError FROM DBO.ExcelData
+		SELECT RowId, @MissinginformationError 
+		FROM DBO.ExcelData
 			WHERE (TechnicianName = '' OR TechnicianName IS NULL)
 			OR (Addressnumber = '' OR Addressnumber IS NULL)
 			OR (JobDate = '' OR JobDate IS NULL)
@@ -43,16 +44,17 @@ BEGIN
 			
 	--Duplicate Invoices
 	INSERT INTO DBO.ExcelDataErrors	(ExcelDataId, ErrorMessage)
-	SELECT RowId, @DuplicateInfoerrOR FROM (
-				SELECT *, ROW_NUMBER() OVER	
-				(PARTITION BY Jobdate, TechnicianName, Street, Total 
-				ORDER BY Jobdate, TechnicianName, Street, Total) AS Rn
-		FROM DBO.ExcelData) x
+	SELECT RowId, @DuplicateInfoError 
+	FROM (SELECT *, ROW_NUMBER() OVER	
+			(PARTITION BY Jobdate, TechnicianName, Street, Total 
+			ORDER BY Jobdate, TechnicianName, Street, Total) AS Rn
+			FROM DBO.ExcelData) x
 	WHERE x.rn > 1
 
-	--No services perfORmed
+	--No services performed
 	INSERT INTO DBO.ExcelDataErrors	(ExcelDataId, ErrorMessage)
-	SELECT Rowid, @NoServicesError FROM DBO.ExcelData
+	SELECT RowId, @NoServicesError 
+	FROM DBO.ExcelData
 		WHERE (Carpet = '' OR Carpet IS NULL OR Carpet = 0)
 			AND (UrineTreatment = '' OR UrineTreatment IS NULL OR UrineTreatment = 0)
 			AND (Protectant = '' OR Protectant IS NULL OR Protectant = 0)
@@ -64,7 +66,8 @@ BEGIN
 			
 	--Total does not match
 	INSERT INTO DBO.ExcelDataErrors	(ExcelDataId, ErrorMessage)
-	SELECT Rowid, @TotalNotMatchError FROM DBO.ExcelData
+	SELECT RowId, @TotalNotMatchError 
+	FROM DBO.ExcelData
 		WHERE Total != (
 			ISNULL(Carpet, 0) +
 			ISNULL(UrineTreatment, 0) +
@@ -78,27 +81,30 @@ BEGIN
 			
 	--Cannot find technician in table
 	INSERT INTO DBO.ExcelDataErrors	(ExcelDataId, ErrorMessage)
-	SELECT Rowid, @NotValidTechnician 
+	SELECT RowId, @NotValidTechnician 
 	FROM DBO.ExcelData e
-		LEFT JOIN DBO.Technicians t 
-		on t.name = HASHBYTES('SHA2_256', Concat(e.TechnicianName,'Thisisnottherealsalt'))
+	LEFT JOIN DBO.Technicians t 
+		on t.Name = HASHBYTES('SHA2_256', Concat(e.TechnicianName,'ThisIsNotTheRealSalt'))
 		WHERE t.TechnicianID IS NULL
 		
 	--Cannot find City in table
 	INSERT INTO DBO.ExcelDataErrors	(ExcelDataId, ErrorMessage)
-	SELECT Rowid, @NotvalidCity FROM DBO.ExcelData e
+	SELECT RowId, @NotvalidCity 
+	FROM DBO.ExcelData e
 		LEFT JOIN DBO.Cities c 
 		on c.City = e.city
 		WHERE c.CityID IS NULL
 
 	--City not in Missouri OR Illinois
 	INSERT INTO DBO.ExcelDataErrors ( ExcelDataId, ErrorMessage)
-	SELECT rowid, @NotValidState FROM DBO.ExcelData e
+	SELECT RowId, @NotValidState 
+	FROM DBO.ExcelData e
 	WHERE [STATE] NOT IN ('MO','IL')
 
 	--Zip code wrong
 	INSERT INTO DBO.ExcelDataErrors ( ExcelDataId, ErrorMessage)
-	SELECT Rowid, @WrongZipcode FROM DBO.ExcelData e
+	SELECT RowId, @WrongZipcode 
+	FROM DBO.ExcelData e
 	WHERE Zipcode NOT LIKE '[6][0-9][0-9][0-9][0-9]'
 
 	--Passed Validation
