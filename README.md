@@ -1,3 +1,2 @@
 # Portfolio
-First repository on GitHub
-We are going to try and do currency exchange rates in SQL
+Hello, I'm Rhet. I'm all into Data Analytics.
