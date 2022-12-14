@@ -41,7 +41,7 @@ BEGIN
 			INSERT INTO dbo.Jobs(TechnicianID, AddressID, Discount, Total, JobDate)
 			SELECT Technicianid, @AddressID, E.Discount, E.Total, E.Jobdate 
 			FROM dbo.Technicians t
-				JOIN dbo.Exceldata e ON e.TechnicianName = Hashbytes('Sha2_256', CONCAT(t.Name,'Silksong_Hollowknight'))
+				JOIN dbo.Exceldata e ON e.TechnicianName = Hashbytes('Sha2_256', CONCAT(t.Name,'ThisIsNotTheRealSalt'))
 				WHERE RowId = @ThisRowId
 
 			SET @JobID = SCOPE_IDENTITY();		
