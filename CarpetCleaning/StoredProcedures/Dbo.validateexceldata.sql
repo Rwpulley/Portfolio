@@ -1,4 +1,4 @@
-CREATE PROCEDURE ValidateExcelData
+CREATE PROCEDURE DBO.JobDetails_ValidateExcelData
 	
 AS
 BEGIN
@@ -83,14 +83,14 @@ BEGIN
 	INSERT INTO DBO.ExcelDataErrors	(ExcelDataId, ErrorMessage)
 		SELECT RowId, @NotValidTechnician 
 		FROM DBO.ExcelData e
-		LEFT JOIN DBO.Technicians t on t.Name = HASHBYTES('SHA2_256', Concat(e.TechnicianName,'ThisIsNotTheRealSalt'))
+		LEFT JOIN DBO.Technicians t ON t.Name = HASHBYTES('SHA2_256', Concat(e.TechnicianName,'ThisIsNotTheRealSalt'))
 		WHERE t.TechnicianID IS NULL
 		
 	--Cannot find City in table
 	INSERT INTO DBO.ExcelDataErrors	(ExcelDataId, ErrorMessage)
 		SELECT RowId, @NotvalidCity 
 		FROM DBO.ExcelData e
-		LEFT JOIN DBO.Cities c on c.City = e.city
+		LEFT JOIN DBO.Cities c ON c.City = e.city
 		WHERE c.CityID IS NULL
 
 	--City not in Missouri OR Illinois
@@ -109,14 +109,14 @@ BEGIN
 	UPDATE e
 		SET LoadDataNotes = @PassedValidation
 		FROM DBO.ExcelData e
-		LEFT JOIN DBO.ExcelDataErrors edt on edt.ErrorId = e.RowId
+		LEFT JOIN DBO.ExcelDataErrors edt ON edt.ErrorId = e.RowId
 		WHERE edt.ErrorId IS NULL
 
 	--Failed Validation
 	UPDATE e
 		SET Loaddatanotes = @FailedValidation
 		FROM DBO.ExcelData e
-		JOIN DBO.ExcelDataErrors edt on edt.ErrorId = e.RowId
+		JOIN DBO.ExcelDataErrors edt ON edt.ErrorId = e.RowId
 
 END
 GO
