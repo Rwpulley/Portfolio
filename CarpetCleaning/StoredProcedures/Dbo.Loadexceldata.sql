@@ -20,7 +20,9 @@ BEGIN
 				
 		--Inserts FROM the top row and works its way down.
 	SELECT TOP 1 @ThisRowId = RowId FROM DBO.Exceldata WHERE LoadDataNotes = 'Passed Validation'
-	
+
+    BEGIN TRY
+
 	BEGIN TRANSACTION
 		
 	INSERT INTO DBO.addresses(AddressNumber, Street, Apt, CityID, [State], Zipcode)
@@ -87,6 +89,25 @@ BEGIN
 		WHERE Rowid = @ThisRowId
 
 	DELETE FROM Exceldata WHERE RowId = @ThisRowId
+    COMMIT TRANSACTION
+    END TRY
+
+    BEGIN CATCH
+    DECLARE 
+        @ErrorMessage NVARCHAR(255),
+        @ErrorSeverity INT,
+        @ErrorState INT;
+    SELECT 
+        @ErrorMessage = ERROR_MESSAGE(),
+        @ErrorSeverity = ERROR_SEVERITY(),
+        @ErrorState = ERROR_STATE();
+    RAISERROR (
+        @ErrorMessage,
+        @ErrorSeverity,
+        @ErrorState    
+        );
+    ROLLBACK TRANSACTION
+    END CATCH
 
 	END
 
