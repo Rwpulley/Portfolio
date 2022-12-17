@@ -5,7 +5,7 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-ALTER PROCEDURE [dbo].[JobDetails_LoadExcelData]
+CREATE PROCEDURE [dbo].[JobDetails_LoadExcelData]
 AS
 BEGIN
 
@@ -13,8 +13,8 @@ BEGIN
     BEGIN
 
         DECLARE @ThisRowId INT, 
-                @AddressID INT,
-                @JobID INT
+                @AddressId INT,
+                @JobId INT
 
         DECLARE @CarpetCleaningServiceTypeId INT = 1,
                 @UrineTreatmentServiceTypeId INT = 2,
@@ -26,85 +26,85 @@ BEGIN
                 @OtherServiceTypeId INT = 18
                     
             --Inserts FROM the top row and works its way down.
-        SELECT TOP 1 @ThisRowId = RowId FROM dbo.Jobs_Exceldata WHERE LoadDataNotes = 'Passed Validation'
+        SELECT TOP 1 @ThisRowId = RowId FROM dbo.Jobs_ExcelData WHERE LoadDataNotes = 'Passed Validation'
 
         BEGIN TRY
 
 			BEGIN TRANSACTION
             
-				INSERT INTO dbo.addresses(AddressNumber, Street, Apt, CityID, [State], Zipcode)
+				INSERT INTO dbo.Addresses(AddressNumber, Street, Apt, CityId, [State], Zipcode)
 					SELECT Hashbytes('SHA2_256', CAST(e.AddressNumber AS NVARCHAR(100))), 
 						e.Street,
 						e.Apt, 
-						c.cityid,
+						c.CityId,
 						e.[State],
 						e.Zipcode
 					FROM dbo.Jobs_ExcelData e
 					JOIN dbo.Cities c ON c.City = e.City
-					WHERE c.City = E.City 
+					WHERE c.City = e.City 
 						  AND RowId = @ThisRowId
 					ORDER BY RowId 
 
-				SET @AddressID = SCOPE_IDENTITY();
+				SET @AddressId = SCOPE_IDENTITY();
                             
-				INSERT INTO dbo.Jobs(TechnicianID, AddressID, Discount, Total, JobDate)
-					SELECT t.Technicianid, @AddressID, e.Discount, e.Total, e.JobDate
+				INSERT INTO dbo.Jobs(TechnicianId, AddressId, Discount, Total, JobDate)
+					SELECT t.TechnicianId, @AddressId, e.Discount, e.Total, e.JobDate
 					FROM dbo.Jobs_ExcelData e
 					JOIN dbo.Technicians t ON t.[Name] = e.TechnicianName
 					WHERE RowId = @ThisRowId
 
-				SET @JobID = SCOPE_IDENTITY();		
+				SET @JobId = SCOPE_IDENTITY();		
 
-				INSERT INTO JobDetails(JobID, ServiceTypeID, Amount)
-					SELECT @JobID, @CarpetCleaningServiceTypeid, e.Carpet
+				INSERT INTO JobDetails(JobId, ServiceTypeId, Amount)
+					SELECT @JobId, @CarpetCleaningServiceTypeId, e.Carpet
 					FROM dbo.Jobs_ExcelData e
-					WHERE Rowid = @ThisRowId
+					WHERE RowId = @ThisRowId
 						  AND e.Carpet IS NOT NULL AND e.Carpet > 0 
 
-				INSERT INTO JobDetails(JobID, ServiceTypeID, Amount)
-					SELECT @JobID, @UrineTreatmentServiceTypeid, e.Urinetreatment
+				INSERT INTO JobDetails(JobId, ServiceTypeId, Amount)
+					SELECT @JobId, @UrineTreatmentServiceTypeId, e.Urinetreatment
 					FROM dbo.Jobs_ExcelData e
-					WHERE Rowid = @ThisRowId
+					WHERE RowId = @ThisRowId
 						  AND e.Urinetreatment IS NOT NULL AND e.Urinetreatment > 0 
 
-				INSERT INTO JobDetails(JobID, ServiceTypeID, Amount)
-					SELECT @JobID, @ProtectantServiceTypeId, e.Protectant
-					FROM dbo.Jobs_Exceldata e
-					WHERE Rowid = @ThisRowId
+				INSERT INTO JobDetails(JobId, ServiceTypeId, Amount)
+					SELECT @JobId, @ProtectantServiceTypeId, e.Protectant
+					FROM dbo.Jobs_ExcelData e
+					WHERE RowId = @ThisRowId
 						  AND e.Protectant IS NOT NULL AND e.Protectant > 0 
 
-				INSERT INTO JobDetails(JobID, ServiceTypeID, Amount)
-					SELECT @JobID, @UpholsteryServiceTypeId, e.Upholstery
-					FROM dbo.Jobs_Exceldata e
-					WHERE Rowid = @ThisRowId
+				INSERT INTO JobDetails(JobId, ServiceTypeId, Amount)
+					SELECT @JobId, @UpholsteryServiceTypeId, e.Upholstery
+					FROM dbo.Jobs_ExcelData e
+					WHERE RowId = @ThisRowId
 						  AND e.Upholstery IS NOT NULL AND e.Upholstery > 0 
 
-				INSERT INTO JobDetails(JobID, ServiceTypeID, Amount)
-					SELECT @JobID, @AirDuctsServiceTypeId, e.AirDucts
-					FROM dbo.Jobs_Exceldata e
-					WHERE Rowid = @ThisRowId
+				INSERT INTO JobDetails(JobId, ServiceTypeId, Amount)
+					SELECT @JobId, @AirDuctsServiceTypeId, e.AirDucts
+					FROM dbo.Jobs_ExcelData e
+					WHERE RowId = @ThisRowId
 						  AND e.AirDucts IS NOT NULL AND e.AirDucts > 0 
 
-				INSERT INTO JobDetails(JobID, ServiceTypeID, Amount)
-					SELECT @JobID, @TileServiceTypeId, e.Tile
-					FROM dbo.Jobs_Exceldata e
-					WHERE Rowid = @ThisRowId
+				INSERT INTO JobDetails(JobId, ServiceTypeId, Amount)
+					SELECT @JobId, @TileServiceTypeId, e.Tile
+					FROM dbo.Jobs_ExcelData e
+					WHERE RowId = @ThisRowId
 						  AND e.Tile IS NOT NULL AND e.Tile > 0 
 
-				INSERT INTO JobDetails(JobID, ServiceTypeID, Amount)
-					SELECT @JobID, @DryerVentServiceTypeId, e.DryerVent
-					FROM dbo.Jobs_Exceldata e
-					WHERE Rowid = @ThisRowId
+				INSERT INTO JobDetails(JobId, ServiceTypeId, Amount)
+					SELECT @JobId, @DryerVentServiceTypeId, e.DryerVent
+					FROM dbo.Jobs_ExcelData e
+					WHERE RowId = @ThisRowId
 						  AND e.DryerVent IS NOT NULL AND e.DryerVent > 0 
 
-				INSERT INTO JobDetails(JobID, ServiceTypeID, Amount)
-					SELECT @JobID, @OtherServiceTypeId, e.Other
-					FROM dbo.Jobs_Exceldata e
-					WHERE Rowid = @ThisRowId
+				INSERT INTO JobDetails(JobId, ServiceTypeId, Amount)
+					SELECT @JobId, @OtherServiceTypeId, e.Other
+					FROM dbo.Jobs_ExcelData e
+					WHERE RowId = @ThisRowId
 						  AND e.Other IS NOT NULL AND e.Other > 0 
 
 				DELETE FROM dbo.ExcelDataErrors WHERE ExcelDataRowId = @ThisRowId
-				DELETE FROM dbo.Jobs_Exceldata WHERE RowId = @ThisRowId
+				DELETE FROM dbo.Jobs_ExcelData WHERE RowId = @ThisRowId
 
 			COMMIT TRANSACTION
         END TRY
@@ -119,7 +119,7 @@ BEGIN
 				@ErrorSeverity = ERROR_SEVERITY(),
 				@ErrorState = ERROR_STATE();
        
-			INSERT INTO DBO.ExcelDataErrors(ExcelDataRowId, ErrorMessage)
+			INSERT INTO dbo.ExcelDataErrors(ExcelDataRowId, ErrorMessage)
 			   SELECT @ThisRowId, @ErrorMessage
 			   FROM dbo.Jobs_ExcelData
 			   

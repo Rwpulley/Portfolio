@@ -20,6 +20,6 @@ CREATE VIEW [JobSpecifics] AS
             Tile,
             DryerVent,
             Other)
-    ) AS Pivot_table;
+    ) AS Pivot_Table;
 
 
