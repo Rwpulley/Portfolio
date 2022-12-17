@@ -1,8 +1,15 @@
-CREATE PROCEDURE DBO.JobDetails_LoadExcelData
+USE [CarpetCleaning]
+GO
+/****** Object:  StoredProcedure [dbo].[JobDetails_LoadExcelData]    Script Date: 12/16/2022 9:11:15 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[JobDetails_LoadExcelData]
 AS
 BEGIN
 
-    WHILE ((SELECT COUNT(*) FROM ExcelData WHERE LoadDataNotes = 'Passed Validation') > 0)
+    WHILE ((SELECT COUNT(*) FROM dbo.Jobs_ExcelData WHERE LoadDataNotes = 'Passed Validation') > 0)
     BEGIN
 
         DECLARE @ThisRowId INT, 
@@ -19,109 +26,114 @@ BEGIN
                 @OtherServiceTypeId INT = 18
                     
             --Inserts FROM the top row and works its way down.
-        SELECT TOP 1 @ThisRowId = RowId FROM DBO.Exceldata WHERE LoadDataNotes = 'Passed Validation'
+        SELECT TOP 1 @ThisRowId = RowId FROM dbo.Jobs_Exceldata WHERE LoadDataNotes = 'Passed Validation'
 
         BEGIN TRY
 
-        BEGIN TRANSACTION
+			BEGIN TRANSACTION
             
-        INSERT INTO DBO.addresses(AddressNumber, Street, Apt, CityID, [State], Zipcode)
-            SELECT Hashbytes('SHA2_256', CAST(e.AddressNumber AS NVARCHAR(100))), 
-                E.Street,
-                E.Apt, 
-                C.cityid,
-                E.[State],
-                E.Zipcode
-            FROM DBO.exceldata e
-            JOIN DBO.Cities c ON c.City = e.City
-            WHERE c.City = E.City AND
-            RowId = @ThisRowId
-            ORDER BY RowId 
+				INSERT INTO dbo.addresses(AddressNumber, Street, Apt, CityID, [State], Zipcode)
+					SELECT Hashbytes('SHA2_256', CAST(e.AddressNumber AS NVARCHAR(100))), 
+						e.Street,
+						e.Apt, 
+						c.cityid,
+						e.[State],
+						e.Zipcode
+					FROM dbo.Jobs_ExcelData e
+					JOIN dbo.Cities c ON c.City = e.City
+					WHERE c.City = E.City 
+						  AND RowId = @ThisRowId
+					ORDER BY RowId 
 
-        SET @AddressID = SCOPE_IDENTITY();
+				SET @AddressID = SCOPE_IDENTITY();
                             
-        INSERT INTO DBO.Jobs(TechnicianID, AddressID, Discount, Total, JobDate)
-            SELECT Technicianid, @AddressID, E.Discount, E.Total, E.Jobdate 
-            FROM DBO.Technicians t
-                JOIN DBO.Exceldata e ON e.TechnicianName = Hashbytes('Sha2_256', CONCAT(t.Name,'ThisIsNotTheRealSalt'))
-                WHERE RowId = @ThisRowId
+				INSERT INTO dbo.Jobs(TechnicianID, AddressID, Discount, Total, JobDate)
+					SELECT t.Technicianid, @AddressID, e.Discount, e.Total, e.JobDate
+					FROM dbo.Jobs_ExcelData e
+					JOIN dbo.Technicians t ON t.[Name] = e.TechnicianName
+					WHERE RowId = @ThisRowId
 
-        SET @JobID = SCOPE_IDENTITY();		
+				SET @JobID = SCOPE_IDENTITY();		
 
-        INSERT INTO JobDetails(JobID, ServiceTypeID, Amount)
-            SELECT @JobID, @Carpetcleaningservicetypeid, E.Carpet
-            FROM DBO.Exceldata e
-            WHERE Rowid = @ThisRowId
+				INSERT INTO JobDetails(JobID, ServiceTypeID, Amount)
+					SELECT @JobID, @CarpetCleaningServiceTypeid, e.Carpet
+					FROM dbo.Jobs_ExcelData e
+					WHERE Rowid = @ThisRowId
+						  AND e.Carpet IS NOT NULL AND e.Carpet > 0 
 
-        INSERT INTO JobDetails(JobID, ServiceTypeID, Amount)
-            SELECT @JobID, @Urinetreatmentservicetypeid, E.Urinetreatment
-            FROM DBO.Exceldata e
-            WHERE Rowid = @ThisRowId
+				INSERT INTO JobDetails(JobID, ServiceTypeID, Amount)
+					SELECT @JobID, @UrineTreatmentServiceTypeid, e.Urinetreatment
+					FROM dbo.Jobs_ExcelData e
+					WHERE Rowid = @ThisRowId
+						  AND e.Urinetreatment IS NOT NULL AND e.Urinetreatment > 0 
 
-        INSERT INTO JobDetails(JobID, ServiceTypeID, Amount)
-            SELECT @JobID, @ProtectantServiceTypeId, E.Protectant
-            FROM DBO.Exceldata e
-            WHERE Rowid = @ThisRowId
+				INSERT INTO JobDetails(JobID, ServiceTypeID, Amount)
+					SELECT @JobID, @ProtectantServiceTypeId, e.Protectant
+					FROM dbo.Jobs_Exceldata e
+					WHERE Rowid = @ThisRowId
+						  AND e.Protectant IS NOT NULL AND e.Protectant > 0 
 
-        INSERT INTO JobDetails(JobID, ServiceTypeID, Amount)
-            SELECT @JobID, @UpholsteryServiceTypeId, E.Upholstery
-            FROM DBO.Exceldata e
-            WHERE Rowid = @ThisRowId
+				INSERT INTO JobDetails(JobID, ServiceTypeID, Amount)
+					SELECT @JobID, @UpholsteryServiceTypeId, e.Upholstery
+					FROM dbo.Jobs_Exceldata e
+					WHERE Rowid = @ThisRowId
+						  AND e.Upholstery IS NOT NULL AND e.Upholstery > 0 
 
-        INSERT INTO JobDetails(JobID, ServiceTypeID, Amount)
-            SELECT @JobID, @AirDuctsServiceTypeId, E.AirDucts
-            FROM DBO.Exceldata e
-            WHERE Rowid = @ThisRowId
+				INSERT INTO JobDetails(JobID, ServiceTypeID, Amount)
+					SELECT @JobID, @AirDuctsServiceTypeId, e.AirDucts
+					FROM dbo.Jobs_Exceldata e
+					WHERE Rowid = @ThisRowId
+						  AND e.AirDucts IS NOT NULL AND e.AirDucts > 0 
 
-        INSERT INTO JobDetails(JobID, ServiceTypeID, Amount)
-            SELECT @JobID, @TileServiceTypeId, E.Tile
-            FROM DBO.Exceldata e
-            WHERE Rowid = @ThisRowId
+				INSERT INTO JobDetails(JobID, ServiceTypeID, Amount)
+					SELECT @JobID, @TileServiceTypeId, e.Tile
+					FROM dbo.Jobs_Exceldata e
+					WHERE Rowid = @ThisRowId
+						  AND e.Tile IS NOT NULL AND e.Tile > 0 
 
-        INSERT INTO JobDetails(JobID, ServiceTypeID, Amount)
-            SELECT @JobID, @DryerVentServiceTypeId, E.DryerVent
-            FROM DBO.Exceldata e
-            WHERE Rowid = @ThisRowId
+				INSERT INTO JobDetails(JobID, ServiceTypeID, Amount)
+					SELECT @JobID, @DryerVentServiceTypeId, e.DryerVent
+					FROM dbo.Jobs_Exceldata e
+					WHERE Rowid = @ThisRowId
+						  AND e.DryerVent IS NOT NULL AND e.DryerVent > 0 
 
-        INSERT INTO JobDetails(JobID, ServiceTypeID, Amount)
-            SELECT @JobID, @OtherServiceTypeId, E.Other
-            FROM DBO.Exceldata e
-            WHERE Rowid = @ThisRowId
+				INSERT INTO JobDetails(JobID, ServiceTypeID, Amount)
+					SELECT @JobID, @OtherServiceTypeId, e.Other
+					FROM dbo.Jobs_Exceldata e
+					WHERE Rowid = @ThisRowId
+						  AND e.Other IS NOT NULL AND e.Other > 0 
 
-        COMMIT TRANSACTION
+				DELETE FROM dbo.ExcelDataErrors WHERE ExcelDataRowId = @ThisRowId
+				DELETE FROM dbo.Jobs_Exceldata WHERE RowId = @ThisRowId
+
+			COMMIT TRANSACTION
         END TRY
 
         BEGIN CATCH
-            DECLARE 
-                @ErrorMessage NVARCHAR(255),
-                @ErrorSeverity INT,
-                @ErrorState INT;
-            SELECT 
-                @ErrorMessage = ERROR_MESSAGE(),
-                @ErrorSeverity = ERROR_SEVERITY(),
-                @ErrorState = ERROR_STATE();
-           
-           INSERT INTO  ExcelDataErrors(ExcelDataId, ErrorMessage)
-           SELECT @ThisRowId
-           FROM DBO.ExcelData e
-           WHERE @ErrorState > 1
-
-           UPDATE DBO.ExcelData
-		   SET LoadDataNotes = @ErrorMessage
-		   WHERE RowId in 
-			 (SELECT @ThisRowId
-			  FROM DBO.ExcelData
-			  WHERE @ErrorState > 1)
-
-            RAISERROR (
-                @ErrorMessage,
-                @ErrorSeverity,
-                @ErrorState    
-                );
-            ROLLBACK TRANSACTION
+			DECLARE 
+				@ErrorMessage NVARCHAR(255),
+				@ErrorSeverity INT,
+				@ErrorState INT;
+			SELECT 
+				@ErrorMessage = ERROR_MESSAGE(),
+				@ErrorSeverity = ERROR_SEVERITY(),
+				@ErrorState = ERROR_STATE();
+       
+			INSERT INTO DBO.ExcelDataErrors(ExcelDataRowId, ErrorMessage)
+			   SELECT @ThisRowId, @ErrorMessage
+			   FROM dbo.Jobs_ExcelData
+			   
+			UPDATE dbo.Jobs_ExcelData
+				SET LoadDataNotes = 'Failure During Load'
+				WHERE RowId = @ThisRowId
+					 	   
+		   RAISERROR (
+				@ErrorMessage,
+				@ErrorSeverity,
+				@ErrorState    
+				);
+			ROLLBACK TRANSACTION
         END CATCH
-
-    DELETE FROM Exceldata WHERE RowId = @ThisRowId
 
 	END
 
