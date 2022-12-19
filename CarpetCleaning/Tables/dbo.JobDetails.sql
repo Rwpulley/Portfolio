@@ -1,3 +1,13 @@
+USE [CarpetCleaning]
+GO
+
+/****** Object:  Table [dbo].[JobDetails]    Script Date: 12/19/2022 2:43:30 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
 CREATE TABLE [dbo].[JobDetails](
 	[JobDetailID] [int] IDENTITY(1,1) NOT NULL,
 	[JobID] [int] NOT NULL,
@@ -10,11 +20,6 @@ PRIMARY KEY CLUSTERED
 ) ON [PRIMARY]
 GO
 
-ALTER TABLE [dbo].[JobDetails]  WITH CHECK ADD FOREIGN KEY([JobID])
-REFERENCES [dbo].[Jobs] ([JobID])
-GO
-
 ALTER TABLE [dbo].[JobDetails]  WITH CHECK ADD FOREIGN KEY([ServiceTypeID])
 REFERENCES [dbo].[ServiceTypes] ([ServiceTypeID])
 GO
-

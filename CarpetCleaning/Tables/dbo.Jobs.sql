@@ -1,3 +1,13 @@
+USE [CarpetCleaning]
+GO
+
+/****** Object:  Table [dbo].[Jobs]    Script Date: 12/19/2022 2:44:09 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
 CREATE TABLE [dbo].[Jobs](
 	[JobID] [int] IDENTITY(1,1) NOT NULL,
 	[TechnicianID] [int] NOT NULL,
@@ -19,6 +29,11 @@ GO
 ALTER TABLE [dbo].[Jobs] CHECK CONSTRAINT [FK__Jobs__AddressID__571DF1D5]
 GO
 
-ALTER TABLE [dbo].[Jobs]  WITH CHECK ADD FOREIGN KEY([TechnicianID])
+ALTER TABLE [dbo].[Jobs]  WITH CHECK ADD  CONSTRAINT [FK__Jobs__Technician__5629CD9C] FOREIGN KEY([TechnicianID])
 REFERENCES [dbo].[Technicians] ([TechnicianID])
 GO
+
+ALTER TABLE [dbo].[Jobs] CHECK CONSTRAINT [FK__Jobs__Technician__5629CD9C]
+GO
+
+
