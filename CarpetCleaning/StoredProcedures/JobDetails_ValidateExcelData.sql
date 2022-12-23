@@ -55,8 +55,8 @@ BEGIN
 	INSERT INTO dbo.ExcelDataErrors	(ExcelDataRowId, ErrorMessage)
 		SELECT RowId, @DuplicateInfoError 
 		FROM (SELECT *, ROW_NUMBER() OVER	
-			 (PARTITION BY Jobdate, TechnicianName, Street, Total 
-			 ORDER BY Jobdate, TechnicianName, Street, Total) AS Rn
+			 (PARTITION BY Jobdate, TechnicianName, Street, Apt, Total 
+			 ORDER BY Jobdate, TechnicianName, Street, Apt, Total) AS Rn
 			 FROM dbo.Jobs_ExcelData) x
 		WHERE x.rn > 1
 
