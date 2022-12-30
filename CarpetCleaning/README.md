@@ -1,41 +1,31 @@
 # Carpet Cleaning MS-SQL Database
 
-    Summary
-          This is a Database for a Carpet cleaning company. It can be used in multiple other fields as well.\
-          Names and address have been changed for anonymity.
+## Summary
+This is a Database for a Carpet cleaning company. It can be used in multiple other fields as well.\
+Names and address have been changed for anonymity.
   
+## How to install this database on your computer.
   
-  How to install this database on your computer.
-  
-    1. Install SQL server. Directions for doing so can be found at 
-       <https://learn.microsoft.com/en-us/sql/database-engine/install-windows/install-sql-server?view=sql-server-ver16>
+1. Install SQL server. Directions for doing so can be found [here](https://learn.microsoft.com/en-us/sql/database-engine/install-windows/install-sql-server?view=sql-server-ver16)
        
-    2. Install Management Studio. Directions can be found at 
-       <https://learn.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-ver16>
+2. Install Management Studio. Directions can be found [here](https://learn.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-ver16)
+
+3. There are two different ways in order to put this database on your server. The first way is to restore the database onto your computer using the included bak folder, the second way is through scripts. 
        
-    3. There are two different ways in order to put this database on your server. The first way is to restore the database onto your 
-       computer using the included bak folder, the second way is through scripts. 
-       
-    4. Once downloaded you will need to open Microsoft SQL server Management Studio. Once you have logged in using your credentials 
-       right click on the database folder and select restore database.
+4. Once downloaded you will need to open Microsoft SQL server Management Studio. Once you have logged in using your credentials right click on the database folder and select restore database.
        
 <img src="https://user-images.githubusercontent.com/108885804/210087077-d7c221c3-1b4f-4db6-b0f2-d8e5b0e7b06c.png" height="400px" />
 
-       A restore database window will open and you will need to click the device circle under Source. After that click on the
-       3 little dots to the right of that.
+A restore database window will open and you will need to click the device circle under Source.\
+After that click on the 3 little dots to the right of that.
       
 <img src="https://user-images.githubusercontent.com/108885804/210087208-7f880aef-bafe-4a8e-aeff-749a37d0a027.png" height="500px" />
 
-       Click add on the next window and find the bak folder you downloaded. Click okay three times and congratulations you have
-       the database.      
+Click add on the next window and find the bak folder you downloaded. Click okay three times and congratulations you have the database.      
       
-    5. The second way you can put this database on your server is by opening the Carpetcleaningdatabasescripts.sql file in the Bak 
-       folder. This will pull up the directions for creating this database on your server. Highlight the entire script and copy it. 
-       Open a new query by clicking on the New Query button in Management studio. Paste the script into your window and click excute 
-       or F5 to run the script. This will create the database on your server.
-       
-       
-   How to run the Extract, Transform, Load Process (ETL)
+5. The second way you can put this database on your server is by opening the Carpetcleaningdatabasescripts.sql file in the Bak folder. This will pull up the directions for creating this database on your server. Highlight the entire script and copy it. Open a new query by clicking on the New Query button in Management studio. Paste the script into your window and click excute or F5 to run the script. This will create the database on your server.
+      
+## How to run the Extract, Transform, Load Process (ETL)
    
      1. You will need the spreadsheet found in the Bak Folder. You can open it in either Excel or Google Spreadsheets. It is in 
         XLSX and CSV format. 
@@ -68,8 +58,7 @@ VALUES
 
 BULK INSERT dbo.Jobs_ExcelData
 FROM 'Path'
-WITH
-(FORMAT = 'CSV', FIRSTROW = 2)
+WITH (FORMAT = 'CSV', FIRSTROW = 2)
 
 ```
                         
