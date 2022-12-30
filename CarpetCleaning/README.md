@@ -18,10 +18,14 @@
        
     4. Once downloaded you will need to open Microsoft SQL server Management Studio. Once you have logged in using your credentials 
        right click on the database folder and select restore database.
-        ![Alt text](http://user-images.githubusercontent.com/108885804/210087077-d7c221c3-1b4f-4db6-b0f2-d8e5b0e7b06c.png)
+       
+<img src="https://user-images.githubusercontent.com/108885804/210087077-d7c221c3-1b4f-4db6-b0f2-d8e5b0e7b06c.png" height="400px" />
+
        A restore database window will open and you will need to click the device circle under Source. After that click on the
        3 little dots to the right of that.
-       ![Restore database from device](https://user-images.githubusercontent.com/108885804/210087208-7f880aef-bafe-4a8e-aeff-749a37d0a027.png)
+      
+<img src="https://user-images.githubusercontent.com/108885804/210087208-7f880aef-bafe-4a8e-aeff-749a37d0a027.png" height="500px" />
+
        Click add on the next window and find the bak folder you downloaded. Click okay three times and congratulations you have
        the database.      
       
@@ -49,8 +53,8 @@
         
 ```sql
 
-Insert into dbo.Cities
-Values
+INSERT INTO dbo.Cities
+VALUES
 ('City Name', 'Miles from center of area')
 
 ```           
@@ -59,12 +63,15 @@ Values
         your saved spreadsheet data. In order to copy that path find the spreadsheet data on your computer and right click on it, 
         hightlight copy path and click on it. Now paste thet path name after EXEC dob.JobDetails_BulkInsert. You can also just run
         a Bulk insert command.
-        
-                        Bulk insert dbo.Jobs_ExcelData
-                        from 'Path'
-                        With
-                        (Format = 'CSV',
-                        Firstrow = 2)
+    
+```sql
+
+BULK INSERT dbo.Jobs_ExcelData
+FROM 'Path'
+WITH
+(FORMAT = 'CSV', FIRSTROW = 2)
+
+```
                         
      5. Once your data is in the Jobs_ExcelData table you will need to validate the data. Meaning making sure that there are no errors
         present in you table that would create problems when moving it to your other tables. Run the validation by opeing a new query 
