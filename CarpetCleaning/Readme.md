@@ -18,7 +18,7 @@
        
     4. Once downloaded you will need to open Microsoft SQL server Management Studio. Once you have logged in using your credentials 
        right click on the database folder and select restore database.
-        ![Restore database](https://user-images.githubusercontent.com/108885804/210087077-d7c221c3-1b4f-4db6-b0f2-d8e5b0e7b06c.png)
+        ![alt text](https://user-images.githubusercontent.com/108885804/210087077-d7c221c3-1b4f-4db6-b0f2-d8e5b0e7b06c.png)
        A restore database window will open and you will need to click the device circle under Source. After that click on the
        3 little dots to the right of that.
        ![Restore database from device](https://user-images.githubusercontent.com/108885804/210087208-7f880aef-bafe-4a8e-aeff-749a37d0a027.png)
