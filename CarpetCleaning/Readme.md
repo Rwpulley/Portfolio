@@ -1,7 +1,7 @@
 # Carpet Cleaning MS-SQL Database
 
 ## Summary
-This is a Database for a Carpet cleaning company. It can be used in multiple other fields as well.\
+This is a Database for a Carpet cleaning company. It could be used for other industries as well.\
 Names and address have been changed for anonymity.
 
 ## How to install this database on your computer.
