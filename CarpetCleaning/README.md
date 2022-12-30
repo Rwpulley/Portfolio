@@ -47,9 +47,9 @@
         clcking on the dbo.Cities table. Click Edit top 200 rows to change the city names to your area. If you need to add more than 
         200 cities to the table you will need to use the insert query. You can do the same for your own Technicians.
         ```
-                        Insert into dbo.Cities
-                        Values
-                        ('City Name', 'Miles from center of area')
+        Insert into dbo.Cities
+        Values
+        ('City Name', 'Miles from center of area')
         ```           
      4. In order to pull your spreadsheet data to the Database you will need to do a bulk insert. This can be done using the Stored
         Procedure included in the database. Open a new query window and type EXEC dbo.JobDetails_BulkInsert followed by the path to 
