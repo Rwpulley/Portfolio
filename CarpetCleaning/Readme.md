@@ -46,11 +46,11 @@
         own area. This can be easily done by clicking on the plus next to the CarpetCleaning Database on Management Studio and right 
         clcking on the dbo.Cities table. Click Edit top 200 rows to change the city names to your area. If you need to add more than 
         200 cities to the table you will need to use the insert query. You can do the same for your own Technicians.
-        
+        ```
                         Insert into dbo.Cities
                         Values
                         ('City Name', 'Miles from center of area')
-                        
+        ```           
      4. In order to pull your spreadsheet data to the Database you will need to do a bulk insert. This can be done using the Stored
         Procedure included in the database. Open a new query window and type EXEC dbo.JobDetails_BulkInsert followed by the path to 
         your saved spreadsheet data. In order to copy that path find the spreadsheet data on your computer and right click on it, 
