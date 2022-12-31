@@ -1,7 +1,8 @@
-# Portfolio
-<img src="https://user-images.githubusercontent.com/108885804/210109116-8a16571a-eb1b-4ac6-941b-74c8c413797c.jpg" height="100px"/>
+# Rhet Pulley - SQL Developer, Data Analyst, Report Writer, ETL Developer
+<img src="https://user-images.githubusercontent.com/108885804/210109116-8a16571a-eb1b-4ac6-941b-74c8c413797c.jpg" height="100px"/>  Rwpull@gmail.com  
 
-My name is Rhet Pulley. For the past year I have been able to learn Microsoft SQL, PostgreSQL and MySQL through training with a Senior SQL Developer. 
+
+For the past year I have been able to learn Microsoft SQL, PostgreSQL and MySQL through training with a Senior SQL Developer. 
 I have experience and training in multiple different areas including:
 |SQL Experience|GitHub Experience|                                                                    
 |---|---|                                                                                
