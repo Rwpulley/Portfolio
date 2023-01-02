@@ -1,4 +1,4 @@
-# Portfolio
+# Portfolio for Rhet Pulley
 I am a part owner of a carpet cleaning company. I wanted to be able to analyze our biometrics to get a feel for how 
 my technicians were doing with additional services. As well as which cities or zipcodes seemed to make more money.
 This Portfolio comtains tables I have created as well as stored procedures created with SQL in order to Extract,
